@@ -79,13 +79,11 @@ def get_sil_thres(mp3_silence):
             file_path = os.path.join(mp3_silence, filename)
 
             audio = AudioSegment.from_mp3(file_path).get_array_of_samples()
+            audio = audio[:480000]
 
             # Calculate the energy of each sample
             energy_values, _ = calculate_energy(audio)
 
-            # Ensure total_energy_values has the same shape as energy_values
-            if total_energy_values.shape[0] != energy_values.shape[0]:
-                total_energy_values = np.zeros_like(energy_values, dtype=float)            
             total_energy_values = np.add(total_energy_values, energy_values)
             
     return total_energy_values/len(os.listdir(mp3_silence))  
@@ -160,7 +158,7 @@ def main():
     # Specify the threshold duration and energy threshold
     min_duration_threshold = 150 
     max_duration_threshold = 350 
-    rec_thres = 185
+    rec_thres = 10
     multi_level_thres = 7 
     reject_noisy = True
 
