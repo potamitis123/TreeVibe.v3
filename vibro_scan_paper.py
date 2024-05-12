@@ -96,14 +96,12 @@ def get_silence_thres(mp3_silence):
             # info = mediainfo(file_path)
             # fs = info['sample_rate']
             audio = np.array(AudioSegment.from_mp3(file_path).get_array_of_samples())
+            audio = audio[:480000]
             audio = convert_rec_to_float(audio)
 
             # Calculate the energy of each sample
             energy_values, _ = calculate_energy(audio)
 
-            # Ensure total_energy_values has the same shape as energy_values
-            if total_energy_values.shape[0] != energy_values.shape[0]:
-                total_energy_values = np.zeros_like(energy_values, dtype=float)            
             total_energy_values = np.add(total_energy_values, energy_values)
             
     return total_energy_values/len(os.listdir(mp3_silence))   
@@ -198,7 +196,7 @@ def main():
     # Specify the threshold duration and energy threshold
     min_duration_threshold = 150 #127 #for in-lab experiments
     max_duration_threshold = 350 #650 #for in-lab experiments #
-    rec_thres = 185
+    rec_thres = 10
     multi_level_thres = 7 #3 #for in-lab experiments
     reject_noisy = False # When scanning field data this needs to be set to True. The 'infested' folder has mostly high quality data
 
